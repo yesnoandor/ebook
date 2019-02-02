@@ -1,0 +1,217 @@
+常用操作
+一. 创建工作目录
+	1. 进入到一个目录作为工作目录
+	2. git init
+	3. git add .			(git add -A . : 手工删除的也提交到暂存区)
+	4. git commit -m "..."
+	   or
+	   git commit -m '
+		1. xxx 
+		2. xxx
+		'
+	5. 
+	
+二. 将当前工作目录添加到google code网站上
+	1. git remote add origin https://code.google.com/p/gitdemotest/
+	2. git push origin --all
+	
+三. 创建分支和合并
+	1. git branch testbranch
+	2. git checkout testbranch
+	3. git checkout master
+	4. git merge testbranch : 将指定的分支切换到当前的分支上来
+	
+四. 回滚
+	1. git branch backup : 备份到一个新分支
+	2. git log : 找到要回滚的版本
+	3. git reset --hard hashcode(<tag_name>) :	回滚
+
+五. 合并分支
+	1. git checkout master : 切换到主分支
+	2. git merge <branch_name> : 合并指定的分支
+	3. git branch -D <branch_name> : 删除指定的分支
+	
+	
+	
+六. 网盘保管git repository
+	网盘目录(~/Yunio/git/git-Android-CM8001)：
+	1. git init --bare : 创建空的裸版本库
+	
+	工作目录：
+	1. git remote add origin ~/Yunio/git/git-Android-CM8001 : 添加一个新的远程仓库
+	2. git push origin master : 提交本地master分支
+	3. git push origin test:test : 提交本地test分支到远程仓库，名字也为test分支
+	4. git push origin --delete <branchName> ：删除远程仓库的分支
+	
+	
+	另一台机器的工作目录：
+	1. git clone ~/Yunio/git/git-Android-CM8001 ~/work/Android-CM8001 : 本地克隆一份代码
+	2. git pull origin master : 将远程仓库的代码更新到本地mast分支
+	3. git pull origin test:test :  将远程仓库的test分支更新到本地test分支
+	
+	
+	
+-----------------------------------------------------------------------------------------------------------	
+详细命令
+一. git config的使用 (新增、更改Git的各种设置)
+	1. git config ：显示所有的git config命令参数描述
+	2. git config -e ：打开./git/config文件并编辑
+	3. git config -e --global：打开~/.gitconfig(用户主目录下)全局配置文件进行编辑
+	4. git config -e --system：打开/etc/gitconf 系统级配置文件进行编辑
+	5. git config <section>.<key> ：读取INI配置文件中某个配置的键值
+	6. git config <section>.<key> <value>：更改INI配置文件中某个配置的键值
+	7. git config -l ：显示用户名，邮箱等git配置信息
+	
+二. git remote的使用
+	1. git remote -v ：查看远程仓库
+	2. git remote add [name] [url] ：添加远程仓库
+	3. git remote rm [name] ：删除远程仓库
+	4. git remote set-url --push [name] [newUrl] ：修改远程仓库
+	5. git pull [remoteName] [localBranchName] ：拉取远程仓库
+	6. git push [remoteName] [localBranchName] ：推送远程仓库
+	
+	$ git push origin test:master         	// 提交本地test分支作为远程的master分支
+	$ git push origin test:test             // 提交本地test分支作为远程的test分支
+
+五. git log的使用 (查看历史日志)
+	1. git log ：详细的版本提交信息
+	2. git log --graph --oneline ： 显示更短小的提交ID
+	3. git log --decorate --oneline: 显示提交的里程碑和其他的引用
+	
+六. git reset的使用 （将当前的工作目录完全回滚到指定的版本号，重置命令会丢失曾经的修改）
+	1. git reset --hard HEAD^ ：将master分支重置到上一个老的提交
+	2. git reset --hard hashcode ：将master分支重置到指定hash code的版本
+	3. git reset --soft HEAD^ ：工作区和暂存区不改变，但是引用向前回退一次，只回退了commit的信息，不会恢复到index file一级
+	4. git reset HEAD^ ：工作区不改变，但是暂存区会回退到上一次提交前，引用向前回退一次
+	
+七. git reflog的使用 (查看所有分支的所有操作记录)
+	1. git reflog show master | head -5 ：查看master分支的日志文件
+	2. git reflog show refs/stash 查看stash日志文件
+	3. git reflog -n ：查看HEAD的日志文件，n代表看n条记录
+	
+八. git branch的使用 (对分支的增、删、查等操作)
+	1. git branch : 列出本地所有的分支
+	2. git branch -v ：描述当前分支的信息，绿色为当前默认分支
+	3. git branch <name> ：创建一个name的分支
+	4. git branch -D <name> : 强制删除name的分支
+	5. git branch -a ：查看当前分支和远程分支
+	6. git branch -r : 查看远程分支
+	7. git branch -r -d origin/branch-name : 删除远程分支 (git push origin :branch-name)
+	8. git push origin <name>
+	9. git branch <branch> <start point> : 从某一个hash值作为开始点创建分支
+    10. git branch -vv : 查看当前分支和跟踪的远程分支
+	
+	
+九. git checkout的使用 (a.不同的branch之间进行切换;b.还原代码的作用)
+	1. git checkout : 汇总显示工作区、暂存区与HEAD的差异(同 git checkout HEAD)
+	2. git checkout <branch> ：切换到branch分支，更新HEAD,以及用HEAD指向的树更新暂存区和工作区
+	3. git checkout branch --filename ： 用暂存区中filename文件来覆盖工作区中的filename文件。相当于取消自上次执行git add filename以来（如果执行过）的本地修改
+	4. git checkout -b <name> <start point> ：创建一个name的分支,并切换到name分支
+		git checkout -b local-branchname origin/remote_branchname : 将远程分支映射到本地命名为local-branchname  的一分支
+		git push origin <name>  : 创建远程分支，并映射到当前分支name上
+	5. git checkout . ：取消所有的本地修改，相当于暂存区的所有文件直接覆盖本地文件
+	6. git checkout -q commit_hash : 恢复到当前分支指定的commit的对应hash值的
+	
+十. git stash的使用 (将当前未提交的工作存入Git工作栈中，时机成熟的时候再应用回来)
+	1. git stash ：备份当前的工作区的内容，保存当前进度 （将当前未提交的工作存入Git工作栈中）,并从最近的一次提交中读取相关内容，让工作区保证和上次提交的内容一致
+	2. git stash list ： 查看保存的进度列表
+	3. git stash pop ： 恢复最近的保存进度
+	4. git stash pop [<--index>] [<stash>]： 恢复指定<stash>的保存进度
+	5. git stash clear ：删除所有的存储进度
+	
+十一. git tag的使用 (将具体的版本打上一个标签,作为里程碑)
+	1. git tag ：显示当前有的tag
+	2. git tag -a <tag_name> -m "..."： 将当前的版本打上一个tag并增加一个描述
+	3. git checkout -b <branch_name> tag ：根据tag创建分支
+	4. git push origin --tag ：将本地所有标签一次性提交到git服务器
+	5. git show <tag_name> ：查看tag的版本信息
+	6. git describe ：显示最近的tag作为基础版本号，后面附加距离基础版本的数字和hash值
+	7. git tag -d <tag_name> : 删除指定的ta
+	
+十二. git中文件的删除
+	1. 工作目录下 rm：只删除工作目录下的文件，对暂存区和版本库没有影响
+	2. 恢复工作目录下的删除：git checkout -- <file>...
+	3. git rm : 暂存区的文件删除 
+	
+十三. git add	(是将当前更改或者新增的文件加入到Git的暂存区索引中)
+	1. git add -u： 将本地目录文件的变更（修改，删除）全部记录到暂存区
+	2. git add -A： 将本地目录文件的所有改动及新增文件添加到暂存区
+	3. git add -i： 通过交互式的界面，增加指定的新文件 
+	4. git add -f:	强制添加文件
+	
+十四. git archive	
+	1. git archive -o latest.zip HEAD ： 将最新提交建立归档文件
+	2. git archive -o latest.zip HEAD a ：将最新提交的a目录建立归档文件
+	3. git archive --format=tar  <tag_name> | gzip > foo-0.1.tar.gz ：基于tag建立归档文件
+	
+十五. git中文件的移动
+	1. 工作目录下 mv：只移动工作目录下的文件，对暂存区和版本库没有影响
+	2. 恢复工作目录下的移动：git checkout -- <file>...
+	3. git mv : 暂存区的移动
+	
+十六. git push的使用 (将本地commit的代码更新到远程版本库中)
+	
+	1. git push <远程主机名> <本地分支名>:<远程分支名> : 提交本地的分支到远程仓库,作为远程仓库的指定分支
+			git push origin master:master
+	2. git push origin :<branch_name> : 删除远程的分支
+	3. git push : 推送到远程版本库的同名分支中
+	4. git push [remoteName] [localBranchName] : 
+	5. git push -u origin test : 将当前分支默认关联到远程主机的分支名
+	
+十七. git pull的使用 (从其他的版本库（既可以是远程的也可以是本地的）将代码更新到本地)
+	1. git pull : 相当于 a.git fetch;	b.git merge
+	2. 
+	3.
+	
+十八. git fetch的使用	
+	1. git fetch origin : 创建并更新所有远程分支的本地远程分支.(和push不同, fetch会自动获取远程`新加入'的分支)
+	
+十九. git remote的使用
+	1. git remote -v : 查看远程仓库
+	2. git remote add [name] [url] : 添加远程仓库
+	3. git remote rm [name] :  删除远程仓库
+	4. git remote set-url --push[name][newUrl] : 修改远程仓库
+	
+二十. git revert的使用 (还原一个版本的修改，必须提供一个具体的Git版本号)
+	1. 
+	2. 
+	3.
+
+二十一. git rev-parse的使用 (Git探测工具)
+	1. git rev-parse --git-dir : 显示版本库.git目录所在的位置
+	2. git rev-parse --show-toplevel : 显示工作区根目录
+	3. 
+
+---------------------------------------------------------------------------
+目录结构
+一. 一些文件的位置
+	1. master文件：描述master分支的当前hash版本的code，位于.git/refs/heads/master
+	2. master文件：描述master分支的日志文件，位于.git/logs/refs/heads/master
+	3. HEAD文件：描述了指向引用分支master，位于.git/HEAD
+	4. ref目录： 存储了你在当前版本控制目录下的各种不同引用（引用指的是你本地和远程所用到的各个树分支的信息），
+				 它有heads、remotes、stash、tags四个子目录，分别存储对不同的根、远程版本库、Git栈和标签的四种引用，
+				 可以通过命令'git show-ref'更清晰地查看引用信息
+	5. logs目录：根据不同的引用存储了日志信息
+	6. .gitignore：标注需要忽略的文件，支持通配符
+	7. ~/.gitconfig: git的配置变量，
+		
+二. 查看各种信息
+	1. git ls-files ：查看暂存区的文件
+	2. git rev-list HEAD | wc -l ：查看版本提交的总的次数
+	3. git .git/HEAD : 查看分离头指针状态
+	4. git status : 查看当前仓库的状态
+	5. git rev-parse --git-dir : 显示版本库.git目录所在的位置
+	
+三. .git目录结构
+	1. HEAD文件 : 存放根节点的信息
+	2. refs目录 ：存储了在当前版本控制目录下的各种不同引用(引用指的是你本地和远程所用到的各个树分支的信息)
+				  它有heads、remotes、stash、tags四个子目录，分别存储对不同的根、远程版本库、Git栈和标签的四种引用
+	3. logs目录 : 根据不同的引用存储了日志信息
+
+
+---------------------------------------------------------------------------
+GITHUB的使用技巧
+一. 
+
+---------------------------------------------------------------------------
+itmjyxka
