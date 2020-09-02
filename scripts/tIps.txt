@@ -1,0 +1,62 @@
+// 压缩与解压
+压缩：
+tar -zcvf xxx.tar.gz xxx
+tar -jcvf xxx.tar.bz2 xxx
+
+解压
+tar -zxvf xxx.tar.gz xxx
+tar -jxvf xxx.tar.bz2 xxx
+
+分卷解压
+cat xxx.tar.gz* | tar zxvf -
+分卷压缩
+tar -czf - xxx | split -b 4096m -d - xxx.tar.gz
+
+
+// 挂载sshfs磁盘
+ssh fleety@192.168.0.95
+sshfs fleety@192.168.0.95:/home/fleety  /home/wenyu/server/server95
+fleety!@#
+
+sshfs pi@192.168.1.66:/home/pi /home/wenyu/server/sshfs/
+
+// 启动tftp
+sudo service tftpd-hpa start
+
+// 挂载本次磁盘
+sudo mount -t ext4 -o rw /dev/sdb ~/server/localdisk/
+sudo umount /dev/sdb
+
+sudo mount -t ext4 -o rw /dev/sdb1 ~/server/ext-disk/
+sudo umount /dev/sdb1
+
+// 改变文件和目录的所有者和组所有者
+chown -R wenyu xxx
+chgrp -R wenyu xxx
+
+// 查看所有的服务
+service --status-all
+
+// 代码仓库
+github (https://github.com/)
+id : yesnoandor
+sn : c9cfrl76
+mail : wenyu__xu@163.com
+
+oschina (https://gitee.com/)
+id : wenyu_xu
+sn : 777777
+
+// 双系统的配置
+sudo gedit /etc/default/grub
+GRUB_DISABLE_OS_PROBER=true
+sudo update-grub
+
+// find的复杂用法
+find . -path "/home/carryf/astetc" -prune -o -type f -name "aaa" -print							// 排除1个目录中所有对应的文件
+find . /( -path "/home/carryf/astetc" -o -path "/home/carryf/etc" /) -prune -o -type f -name "*.conf" -print		// 排除2个目录中所有对应的文件
+
+// grep的复杂用法
+grep -Flnr
+grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' 
+
