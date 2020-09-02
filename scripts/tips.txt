@@ -57,6 +57,6 @@ find . -path "/home/carryf/astetc" -prune -o -type f -name "aaa" -print							//
 find . /( -path "/home/carryf/astetc" -o -path "/home/carryf/etc" /) -prune -o -type f -name "*.conf" -print		// 排除2个目录中所有对应的文件
 
 // grep的复杂用法
-grep -Flnr
-grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' 
+grep -Flnr xxx
+grep -rn --exclude-dir=build_* --exclude-dir=kernel --exclude-dir=drivers --exclude=*.out 'abcdefg' 			// 排除2个目录和一个类型的文件
 
