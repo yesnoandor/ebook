@@ -12,12 +12,14 @@ usage ()
 	echo "sudo $0 /dev/sdX 2 --- only install rootfs" 
 	echo "sudo $0 /dev/sdX 3 --- only tar bootfs" 
 	echo "sudo $0 /dev/sdX 4 --- only tar rootfs"
+	echo "sudo $0 /dev/sdX 5 --- only tar tidl data-set"
 	echo "sudo $0 /dev/mmcblkN   --- all"
 	echo "sudo $0 /dev/mmcblkN 0 --- only fdisk"
 	echo "sudo $0 /dev/mmcblkN 1 --- only install bootfs"
 	echo "sudo $0 /dev/mmcblkN 2 --- only install rootfs"
 	echo "sudo $0 /dev/mmcblkN 3 --- only tar bootfs"
 	echo "sudo $0 /dev/mmcblkN 4 --- only tar rootfs"
+	echo "sudo $0 /dev/mmcblkN 5 --- only tar tidl data-set"
 }
 
 # 执行shell脚本命令
@@ -190,6 +192,30 @@ install_rootfs()
     fi
 }
 
+# 安装tidl数据集
+install_tidl_data_set()
+{
+	echo "TIDL_DATASET_TAR = $TIDL_DATASET_TAR"
+	echo "VISION_APP_DIR = $VISION_APP_DIR"
+
+	if [ -d $ROOTFS_DIR ] ; then
+        echo "Installing tidl data-set ..."
+
+		execute "mkdir -p $VISION_APP_DIR/$TEST_DATA_DIR"
+		
+		if [ -f $TIDL_DATASET_TAR ]
+        then
+			tar -zxvf ./$TIDL_DATASET_TAR --strip-components 1 -C $VISION_APP_DIR
+            sync
+            echo "Installing tidl data-set ... Done"
+        else
+            echo "ERROR: $TIDL_DATASET_TAR not found !!!"
+        fi
+    else
+        echo "ERROR: $ROOTFS_DIR not found !!!"
+    fi
+}
+
 # 将当前boot分区打包成tar包
 tar_bootfs()
 {
@@ -231,8 +257,7 @@ tar_rootfs()
 	fi
 }
 
-
-function build_parse()
+build_parse()
 {
 	echo "build parse::++++++++++"
 	
@@ -298,6 +323,9 @@ function build_parse()
 			4)
 				tar_rootfs
 				;;
+			5)
+				install_tidl_data_set
+				;;
 			*)
 				usage $0
 				exit 1
@@ -305,11 +333,12 @@ function build_parse()
 		esac
 	fi
 
-	
 	echo "build parse::----------"
 }
 
-function create_partition()
+
+
+create_partition()
 {
 	check_root_user
 	check_if_main_drive
@@ -427,15 +456,19 @@ BUILD_DIR=$TOP_DIR/build
 DEPLOY_DIR=$BUILD_DIR/arago-tmp-external-arm-glibc/deploy/images/j7-evm
 BOOTFS_DIR=/media/$User/boot
 ROOTFS_DIR=/media/$User/rootfs
+VISION_APP_DIR=/media/$User/rootfs/opt/vision_apps
+TEST_DATA_DIR=test_data
 BOOTFS_TAR=boot-j7-evm.tar.gz
 ROOTFS_TAR=tisdk-default-image-j7-evm.tar.xz
+TIDL_DATASET_TAR=psdk_rtos_ti_data_set_07_02_00.tar.gz
 
 echo "TOP DIR = $TOP_DIR"
 echo "BUILD DIR = $BUILD_DIR"
 echo "DEPLOY DIR = $DEPLOY_DIR"
 echo "BOOTFS DIR = $BOOTFS_DIR"
 echo "ROOTFS DIR = $ROOTFS_DIR"
-echo "ROOTFS TAR = $BOOTFS_TAR"
+echo "VISION_APP_DIR = $VISION_APP_DIR"
+echo "BOOTFS TAR = $BOOTFS_TAR"
 echo "ROOTFS TAR = $ROOTFS_TAR"
 
 build_parse $@

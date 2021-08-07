@@ -3,10 +3,12 @@
 # set -x
 
 # 获取顶层目录
-TOP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/../../..
+#TOP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/../../..
+TOP_DIR=/home/wenyu/server/ext-disk/work/platforms/tda4
 LINUX_DIR=$TOP_DIR/linux
 RTOS_DIR=$TOP_DIR/rtos
-TOOLCHAIN_DIR=$TOP_DIR/toolchain
+#TOOLCHAIN_DIR=$TOP_DIR/toolchain
+TOOLCHAIN_DIR=/opt/toolchain
 
 echo "TOP DIR = $TOP_DIR"
 echo "LINUX DIR = $LINUX_DIR"
